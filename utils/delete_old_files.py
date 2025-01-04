@@ -1,11 +1,11 @@
 import os
 from datetime import datetime, timedelta
 
-def delete_old_files(bill, age_in_years=1):
+def delete_old_files(directory, age_in_years=1):
     """
     Видаляє файли, старші за вказану кількість років, у заданій папці.
 
-    :param bill: Шлях до папки, в якій потрібно видалити файли.
+    :param directory: Шлях до папки, в якій потрібно видалити файли.
     :param age_in_years: Кількість років, старші за яку файли будуть видалені.
     """
     # Поточна дата
@@ -13,12 +13,12 @@ def delete_old_files(bill, age_in_years=1):
     # Гранична дата (файли, створені раніше цієї дати, будуть видалені)
     cutoff_date = now - timedelta(days=age_in_years * 365)
 
-    if not os.path.exists(bill):
-        print(f"Папка {bill} не існує.")
+    if not os.path.exists(directory):
+        print(f"Папка {directory} не існує.")
         return
 
-    for filename in os.listdir(bill):
-        file_path = os.path.join(bill, filename)
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
 
         # Перевіряємо, чи це файл
         if os.path.isfile(file_path):
