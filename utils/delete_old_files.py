@@ -29,5 +29,7 @@ def delete_old_files(directory, age_in_years=1):
             if file_creation_time < cutoff_date:
                 os.remove(file_path)
                 print(f"Файл {file_path} видалено, бо він старший за {age_in_years} рік(и).")
-            else:
-                print(f"Жодного файлу не видалено, бо він не старший за {age_in_years} рік(и).")
+    print(
+        f"\nЖодного файлу не видалено, бо він/вони не старший(і) 1 року.",
+        f"\nЗагальна кількість файлів у папці \"{directory}\": {len(os.listdir(directory))} шт.",
+    )
