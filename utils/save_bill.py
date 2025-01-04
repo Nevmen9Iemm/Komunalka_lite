@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def save_bill(phone_number, bill_details):
-    # Створення папки Bill, якщо її ще немає
+    # Створення папки bill, якщо її ще немає
     if not os.path.exists("bill"):
         os.makedirs("bill")
 

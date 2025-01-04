@@ -1,6 +1,8 @@
 import os
 from tests.test_input_numbers import validate_phone_number
 from datetime import datetime
+
+from utils.delete_old_files import delete_old_files
 from utils.save_bill import save_bill
 
 
@@ -46,6 +48,7 @@ def next_step(phone_number):    # Запит на продовження або 
     if next_action == '1':
         choose_services(phone_number)
     elif next_action == '2':
+        delete_old_files("bill")
         exit()
     else:
         print("Неправильний вибір. Спробуйте ще раз.")
@@ -223,9 +226,9 @@ def calculate_gas_and_supply(phone_number):
 
 
 # def save_bill(phone_number, bill_details):
-#     # Створення папки Bill, якщо її ще немає
-#     if not os.path.exists("Bill"):
-#         os.makedirs("Bill")
+#     # Створення папки bill, якщо її ще немає
+#     if not os.path.exists("bill"):
+#         os.makedirs("bill")
 #
 #     # Отримання поточного часу
 #     timedate = datetime.now().strftime("%Y%m%d")
@@ -233,7 +236,7 @@ def calculate_gas_and_supply(phone_number):
 #
 #     # Створення файлу з рахунком
 #     file_name = f"{timedate}_{phone_number}.txt"
-#     file_path = f"Bill/{file_name}.txt"
+#     file_path = f"bill/{file_name}.txt"
 #     with open(file_path, "a") as file:
 #         # Дата і час
 #         file.write(f"\n---- Рахунок від {timestamp} ----\n")
