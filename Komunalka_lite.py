@@ -1,6 +1,7 @@
 import os
 from tests.test_input_numbers import validate_phone_number
 from datetime import datetime
+from utils.save_bill import save_bill
 
 
 # Ініціалізація списку для зберігання рахунку
@@ -45,7 +46,7 @@ def next_step(phone_number):    # Запит на продовження або 
     if next_action == '1':
         choose_services(phone_number)
     elif next_action == '2':
-        save_bill(phone_number)
+        save_bill(phone_number, bill_details)
         exit()
     else:
         print("Неправильний вибір. Спробуйте ще раз.")
@@ -70,24 +71,24 @@ def choose_electricity_tariff(phone_number):
         print("Неправильний вибір. Спробуйте ще раз.")
         choose_electricity_tariff(phone_number)
 
-
+# Функція для розрахунку електроенергіі з одною зон
 def calculate_single_zone_electricity(phone_number):
     try:
-        current = float(input("Введіть поточні показники (кВт): "))
-        previous = float(input("Введіть попередні показники (кВт): "))
-        if current < previous:
+        current_single_zone = float(input("Введіть поточні показники (кВт): "))
+        previous_single_zone = float(input("Введіть попередні показники (кВт): "))
+        if current_single_zone < previous_single_zone:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
             calculate_single_zone_electricity(phone_number)
             return
-        usage = current - previous
+        usage = current_single_zone - previous_single_zone
         rate = 4.32
         cost = usage * rate
         print(f"Загальна вартість за електроенергію: {cost:.2f} грн")
-        bill_details.append(
+        bill_details = bill_single_zone.append(
             f"Електроенергія (Однозонний): {cost:.2f} грн\n"
-            f"Поточні показники: {" " * 15} {current}\n"
-            f"Попередні показники: {" " * 13} {previous}\n"
-            f"Кількість кВт: {" " * 21} {int(current - previous)}\n"
+            f"Поточні показники: {" " * 15} {current_single_zone}\n"
+            f"Попередні показники: {" " * 13} {previous_single_zone}\n"
+            f"Кількість кВт: {" " * 21} {usage}\n"
         )
 
         next_step(phone_number)
@@ -97,31 +98,34 @@ def calculate_single_zone_electricity(phone_number):
         calculate_single_zone_electricity(phone_number)
 
 
+# Функція для розрахунку електроенергіі з двох зон
 def calculate_two_zone_electricity(phone_number):
     try:
-        current_day = float(input("Введіть поточні показники в зоні День (кВт): "))
-        current_night = float(input("Введіть поточні показники в зоні Ніч (кВт): "))
-        previous_day = float(input("Введіть попередні показники в зоні День (кВт): "))
-        previous_night = float(input("Введіть попередні показники в зоні Ніч (кВт): "))
-        if current_day < previous_day or current_night < previous_night:
+        current_day_two_zone = float(input("Введіть поточні показники в зоні День (кВт): "))
+        current_night_two_zone = float(input("Введіть поточні показники в зоні Ніч (кВт): "))
+        previous_day_two_zone = float(input("Введіть попередні показники в зоні День (кВт): "))
+        previous_night_two_zone = float(input("Введіть попередні показники в зоні Ніч (кВт): "))
+        if current_day_two_zone < previous_day_two_zone or current_night_two_zone < previous_night_two_zone:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
             calculate_two_zone_electricity(phone_number)
             return
 
         rate_day = 4.32
-        rate_night = rate_day * 0.5
-        cost_day = (current_day - previous_day) * rate_day
-        cost_night = (current_night - previous_night) * rate_night
-        total_cost = cost_day + cost_night
-        print(f"Загальна вартість за електроенергію (Двозонний тариф): {total_cost:.2f} грн")
-        bill_details.append(
-            f"Електроенергія (Двозонний):  {total_cost:.2f} грн\n"
-            f"\nПоточні показники День: {" " * 10} {int(current_day)}\n"
-            f"Поточні показники Ніч: {" " * 11} {int(current_night)}\n"
-            f"Попередні показники День: {" " * 8} {int(previous_day)}\n"
-            f"Попередні показники Ніч: {" " * 9} {int(previous_night)}\n"
-            f"Кількість кВт (День): {" " * 14} {int(current_day - previous_day)}\n"
-            f"Кількість кВт (Ніч): {" " * 15} {int(current_night - previous_night)}\n"
+        rate_nigh = rate_day * 0.5
+        cost_day= current_day_two_zone - previous_day_two_zone
+        cost_night = current_night_two_zone - previous_night_two_zone
+        total_cost_day = cost_day * rate_day
+        total_cost_night = cost_night * rate_nigh
+        total_cost_two_zone = total_cost_day + total_cost_night
+        print(f"Загальна вартість за електроенергію (Двозонний тариф): {total_cost_two_zone:.2f} грн")
+        bill_details = bill_two_zone_electricity.append(
+            f"Електроенергія (Двозонний):  {total_cost_two_zone:.2f} грн\n"
+            f"\nПоточні показники День: {" " * 10} {int(current_day_two_zone)}\n"
+            f"Поточні показники Ніч: {" " * 11} {int(current_night_two_zone)}\n"
+            f"Попередні показники День: {" " * 8} {int(previous_day_two_zone)}\n"
+            f"Попередні показники Ніч: {" " * 9} {int(previous_night_two_zone)}\n"
+            f"Кількість кВт (День): {" " * 14} {cost_day}\n"
+            f"Кількість кВт (Ніч): {" " * 15} {cost_night}\n"
         )
 
         next_step(phone_number)
@@ -130,39 +134,43 @@ def calculate_two_zone_electricity(phone_number):
         print("Будь ласка, введіть правильні числові значення.")
         calculate_two_zone_electricity(phone_number)
 
-
+# Функція для розрахунку електроенергіі з трьох зон
 def calculate_three_zone_electricity(phone_number):
     try:
-        current_night = float(input("Введіть поточні показники Ніч (кВт): "))
+        current_night_three_zone = float(input("Введіть поточні показники Ніч (кВт): "))
         current_half_peak = float(input("Введіть поточні показники Напівпік (кВт): "))
         current_peak = float(input("Введіть поточні показники Пік (кВт): "))
-        previous_night = float(input("Введіть попередні показники Ніч (кВт): "))
+        previous_night_three_zone = float(input("Введіть попередні показники Ніч (кВт): "))
         previous_half_peak = float(input("Введіть попередні показники Напівпік (кВт): "))
         previous_peak = float(input("Введіть попередні показники Пік (кВт): "))
-        if current_night < previous_night or current_half_peak < previous_half_peak or current_peak < previous_peak:
+        if current_night_three_zone < previous_night_three_zone or current_half_peak < previous_half_peak or current_peak < previous_peak:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
             calculate_three_zone_electricity(phone_number)
             return
 
         rate_base = 4.32
-        cost_night = (current_night - previous_night) * rate_base * 0.4
-        cost_half_peak = (current_half_peak - previous_half_peak) * rate_base
-        cost_peak = (current_peak - previous_peak) * rate_base * 1.5
-        total_cost = cost_night + cost_half_peak + cost_peak
+        total_night_three_zone = current_night_three_zone - previous_night_three_zone
+        cost_night_three_zone = total_night_three_zone * 1.728
+        total_half_peak = current_half_peak - previous_half_peak
+        cost_half_peak = total_half_peak * rate_base
+        total_peak = current_peak - previous_peak
+        cost_peak = total_peak * 6.48
+        total_cost = cost_night_three_zone + cost_half_peak + cost_peak
         print(f"Загальна вартість за електроенергію (Трьохзонний тариф): {total_cost:.2f} грн")
-        bill_details.append(
+        bill_details = bill_three_zone_electricity.append(
             f"Електроенергія (Трьохзонний): {total_cost:.2f}грн\n"
-            f"\nПоточні показники Ніч: {" " * 11} {int(current_night)}\n"
+            f"\nПоточні показники Ніч: {" " * 11} {int(current_night_three_zone)}\n"
             f"Поточні показники Напівпік: {" " * 6} {int(current_half_peak)}\n"
             f"Поточні показники Пік: {" " * 11} {int(current_peak)}\n"
-            f"Попередні показники Ніч: {int(previous_night)}\n"
+            f"Попередні показники Ніч: {int(previous_night_three_zone)}\n"
             f"Попередні показники Напівпік: {" " * 4} {int(previous_half_peak)}\n"
             f"Попередні показники Пік: {" " * 9} {int(previous_peak)}\n"
-            f"Кількість кВт при Нічному тарифі:    {int(current_night - previous_night)}\n"
-            f"Кількість кВт при Напівпік тарифі:   {int(current_half_peak - previous_half_peak)}\n"
-            f"Кількість кВт при Пік тарифі: {" " * 6} {int(current_peak - previous_peak)}\n"
+            f"Кількість кВт при Нічному тарифі:    {int(total_night_three_zone)}\n"
+            f"Кількість кВт при Напівпік тарифі:   {int(total_half_peak)}\n"
+            f"Кількість кВт при Пік тарифі: {" " * 6} {int(total_peak)}\n"
         )
 
+        save_bill(phone_number, bill_details)
         next_step(phone_number)
 
     except ValueError:
@@ -170,6 +178,7 @@ def calculate_three_zone_electricity(phone_number):
         calculate_three_zone_electricity(phone_number)
 
 
+# Функція для розрахунку газу
 def calculate_gas_and_supply(phone_number):
     try:
         current = float(input("Введіть поточні показники (м³): "))
@@ -188,18 +197,19 @@ def calculate_gas_and_supply(phone_number):
         print(f"Загальна вартість за газопостачання: {cost_supply:.2f} грн")
         print(f"Загальна сума: {total_cost:.2f} грн")
 
-        bill_details.append(
+        bill_details = bill_gas.append(
             f"Газ: {" " * 23} {cost_gas:.2f} грн\n"
             f"\nПоточні показники: {" " * 16} {int(current)}\n"
             f"Попередні показники: {" " * 14} {int(previous)}\n"
             f"\nСпожито: {" " * 22} {usage:.2f} м3\n"
         )
 
-        bill_details.append(
+        bill_details = bill_supply.append(
             f"Газопостачання: {" " * 13} {cost_supply:.2f} грн\n"
             f"Об'єм тарнспортування: {" " * 8} {usage:.2f} м3\n"
         )
 
+        save_bill(phone_number, bill_details)
         next_step(phone_number)
 
     except ValueError:
@@ -207,28 +217,29 @@ def calculate_gas_and_supply(phone_number):
         calculate_gas_and_supply(phone_number)
 
 
-def save_bill(phone_number):
-    # Створення папки Bill, якщо її ще немає
-    if not os.path.exists("Bill"):
-        os.makedirs("Bill")
-
-    # Отримання поточного часу
-    timedate = datetime.now().strftime("%Y%m%d")
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    # Створення файлу з рахунком
-    file_path = f"Bill/{timedate}_{phone_number}.txt"
-    with open(file_path, "a") as file:
-        # Дата і час
-        file.write(f"\n---- Рахунок від {timestamp} ----\n")
-        file.write(f"\nРахунок для телефону: {" " * 5} {phone_number}\n")
-        file.write("\n" + " " * 13 + "Деталі рахунку:\n")
-        for item in bill_details:
-            file.write(f"{item}\n")
-        file.write("Дякуємо за користування нашими послугами!")
-        file.write("\n" + "-" * 41 + "\n")
-
-    print(f"Рахунок збережено у файлі: {file_path}")
+# def save_bill(phone_number, bill_details):
+#     # Створення папки Bill, якщо її ще немає
+#     if not os.path.exists("Bill"):
+#         os.makedirs("Bill")
+#
+#     # Отримання поточного часу
+#     timedate = datetime.now().strftime("%Y%m%d")
+#     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#
+#     # Створення файлу з рахунком
+#     file_name = f"{timedate}_{phone_number}.txt"
+#     file_path = f"Bill/{file_name}.txt"
+#     with open(file_path, "a") as file:
+#         # Дата і час
+#         file.write(f"\n---- Рахунок від {timestamp} ----\n")
+#         file.write(f"\nРахунок для телефону: {" " * 5} {phone_number}\n")
+#         file.write("\n" + " " * 13 + "Деталі рахунку:\n")
+#         for item in bill_details:
+#             file.write(f"{item}\n")
+#         file.write("Дякуємо за користування нашими послугами!")
+#         file.write("\n" + "-" * 41 + "\n")
+#
+#     print(f"Рахунок збережено у файлі: {file_name}")
 
 
 if __name__ == "__main__":
