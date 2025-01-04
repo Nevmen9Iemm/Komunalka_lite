@@ -111,7 +111,7 @@ def calculate_two_zone_electricity(phone_number):
             return
 
         rate_day = 4.32
-        rate_nigh = rate_day * 0.5
+        rate_nigh = 2.16
         cost_day= current_day_two_zone - previous_day_two_zone
         cost_night = current_night_two_zone - previous_night_two_zone
         total_cost_day = cost_day * rate_day
@@ -148,13 +148,16 @@ def calculate_three_zone_electricity(phone_number):
             calculate_three_zone_electricity(phone_number)
             return
 
-        rate_base = 4.32
+        peak_rate = 6.48
+        half_peak_rate = 4.32
+        night_rate = 1.728
+
         total_night_three_zone = current_night_three_zone - previous_night_three_zone
-        cost_night_three_zone = total_night_three_zone * 1.728
+        cost_night_three_zone = total_night_three_zone * night_rate
         total_half_peak = current_half_peak - previous_half_peak
-        cost_half_peak = total_half_peak * rate_base
+        cost_half_peak = total_half_peak * half_peak_rate
         total_peak = current_peak - previous_peak
-        cost_peak = total_peak * 6.48
+        cost_peak = total_peak * peak_rate
         total_cost = cost_night_three_zone + cost_half_peak + cost_peak
         print(f"Загальна вартість за електроенергію (Трьохзонний тариф): {total_cost:.2f} грн")
         bill_details = bill_three_zone_electricity.append(
@@ -181,16 +184,18 @@ def calculate_three_zone_electricity(phone_number):
 # Функція для розрахунку газу
 def calculate_gas_and_supply(phone_number):
     try:
-        current = float(input("Введіть поточні показники (м³): "))
-        previous = float(input("Введіть попередні показники (м³): "))
-        if current < previous:
+        current_gas = float(input("Введіть поточні показники (м³): "))
+        previous_gas = float(input("Введіть попередні показники (м³): "))
+        if current_gas < previous_gas:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
             calculate_gas_and_supply(phone_number)
             return
 
-        usage = current - previous
-        cost_gas = usage * 7.96
-        cost_supply = usage * 1.308
+        rate_gas = 7.96
+        rate_supply = 1.308
+        usage_gas = current_gas - previous_gas
+        cost_gas = usage_gas * rate_gas
+        cost_supply = usage_gas * rate_supply
         total_cost = cost_gas + cost_supply
 
         print(f"Загальна вартість за газ: {cost_gas:.2f} грн")
@@ -199,14 +204,12 @@ def calculate_gas_and_supply(phone_number):
 
         bill_details = bill_gas.append(
             f"Газ: {" " * 23} {cost_gas:.2f} грн\n"
-            f"\nПоточні показники: {" " * 16} {int(current)}\n"
-            f"Попередні показники: {" " * 14} {int(previous)}\n"
-            f"\nСпожито: {" " * 22} {usage:.2f} м3\n"
-        )
-
-        bill_details = bill_supply.append(
+            f"\nПоточні показники: {" " * 16} {int(current_gas)}\n"
+            f"Попередні показники: {" " * 14} {int(previous_gas)}\n"
+            f"\nСпожито: {" " * 22} {usage_gas:.2f} м3\n"
+            f"{"-" * 41}\n"
             f"Газопостачання: {" " * 13} {cost_supply:.2f} грн\n"
-            f"Об'єм тарнспортування: {" " * 8} {usage:.2f} м3\n"
+            f"Об'єм тарнспортування: {" " * 8} {usage_gas:.2f} м3\n"
         )
 
         save_bill(phone_number, bill_details)
