@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c80845d4-3687-417f-9f66-a3df1204b19e" name="Changes" comment="add all def phone_number" />
+    <list default="true" id="c80845d4-3687-417f-9f66-a3df1204b19e" name="Changes" comment="add all def phone_number">
+      <change beforePath="$PROJECT_DIR$/.idea/Komunalka_lite.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Komunalka_lite.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,6 +113,7 @@
       <updated>1735987595614</updated>
       <workItem from="1735987597222" duration="10719000" />
       <workItem from="1736016746902" duration="17000" />
+      <workItem from="1736016767614" duration="956000" />
     </task>
     <task id="LOCAL-00001" summary="Install Commit">
       <option name="closed" value="true" />
