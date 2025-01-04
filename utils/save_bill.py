@@ -4,16 +4,16 @@ from datetime import datetime
 
 def save_bill(phone_number, bill_details):
     # Створення папки Bill, якщо її ще немає
-    if not os.path.exists("Bill"):
-        os.makedirs("Bill")
+    if not os.path.exists("bill"):
+        os.makedirs("bill")
 
     # Отримання поточного часу
     timedate = datetime.now().strftime("%Y%m%d")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Створення файлу з рахунком
-    file_name = f"{timedate}_{phone_number}.txt"
-    file_path = f"Bill/{file_name}.txt"
+    file_name = f"{timedate}_{phone_number}"
+    file_path = f"bill/{file_name}.txt"
     with open(file_path, "a") as file:
         # Дата і час
         file.write(f"\n---- Рахунок від {timestamp} ----\n")
