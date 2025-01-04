@@ -1,5 +1,7 @@
 import os
+from tests.test_input_numbers import validate_phone_number
 from datetime import datetime
+
 
 # Ініціалізація списку для зберігання рахунку
 bill_details = []
@@ -7,48 +9,50 @@ bill_details = []
 
 def main():
     # Запит номера телефону
-    phone_number = input("Введіть номер телефону (без коду країни): ")
-    phone_number = 380 + phone_number
-    choose_services()
-    next_step()
+    phone_number = input("Введіть номер телефону у форматі 380XXXXXXXXXX: ")
     if not validate_phone_number(phone_number):
         print("Неправильний формат номера телефону. Будь ласка, спробуйте знову.")
         main()
+    choose_services(phone_number)
+    next_step(phone_number)
 
 
-def choose_services():
-    print("Зробіть вибір комунальних послуг:"),
-    print("1. Електроенергія"),
-    print("2. Газ та газопостачання")
+def choose_services(phone_number):
+    print(
+    "Зробіть вибір комунальних послуг:",
+    "1. Електроенергія",
+    "2. Газ та газопостачання",
+    "3. Повернутись до вибору номера телефону",
+    sep = "\n"
+    )
 
-    choice = input("Введіть номер послуги (1 або 2): ")
+    choice = input("Зробіть вибір (1, 2 або 3): \n")
 
     while True:
         if choice == '1':
-            choose_electricity_tariff()
+            choose_electricity_tariff(phone_number)
         elif choice == '2':
-            calculate_gas_and_supply()
+            calculate_gas_and_supply(phone_number)
+        elif choice == '3':
+            main()
         else:
             print("Неправильний вибір. Спробуйте ще раз")
-            return True
+            choose_services(phone_number)
 
 
-def next_step():    # Запит на продовження або завершення
+def next_step(phone_number):    # Запит на продовження або завершення
     next_action = input("Виберіть: Продовжити (1) або Завершити (2): ")
     if next_action == '1':
-        choose_services()
+        choose_services(phone_number)
     elif next_action == '2':
-        save_bill()
+        save_bill(phone_number)
+        exit()
     else:
         print("Неправильний вибір. Спробуйте ще раз.")
         return next_action
 
 
-def validate_phone_number(phone_number):
-    return phone_number.startswith("+380") and len(phone_number) == 12 and phone_number[1:].isdigit()
-
-
-def choose_electricity_tariff():
+def choose_electricity_tariff(phone_number):
     print("\nОберіть тариф на електроенергію:")
     print("1. Однозонний")
     print("2. Двозонний")
@@ -57,23 +61,23 @@ def choose_electricity_tariff():
     tariff_choice = input("Введіть номер тарифу (1, 2 або 3): ")
 
     if tariff_choice == '1':
-        calculate_single_zone_electricity()
+        calculate_single_zone_electricity(phone_number)
     elif tariff_choice == '2':
-        calculate_two_zone_electricity()
+        calculate_two_zone_electricity(phone_number)
     elif tariff_choice == '3':
-        calculate_three_zone_electricity()
+        calculate_three_zone_electricity(phone_number)
     else:
         print("Неправильний вибір. Спробуйте ще раз.")
-        choose_electricity_tariff()
+        choose_electricity_tariff(phone_number)
 
 
-def calculate_single_zone_electricity():
+def calculate_single_zone_electricity(phone_number):
     try:
         current = float(input("Введіть поточні показники (кВт): "))
         previous = float(input("Введіть попередні показники (кВт): "))
         if current < previous:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
-            calculate_single_zone_electricity()
+            calculate_single_zone_electricity(phone_number)
             return
         usage = current - previous
         rate = 4.32
@@ -86,14 +90,14 @@ def calculate_single_zone_electricity():
             f"Кількість кВт: {" " * 21} {int(current - previous)}\n"
         )
 
-        next_step()
+        next_step(phone_number)
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення")
-        calculate_single_zone_electricity()
+        calculate_single_zone_electricity(phone_number)
 
 
-def calculate_two_zone_electricity():
+def calculate_two_zone_electricity(phone_number):
     try:
         current_day = float(input("Введіть поточні показники в зоні День (кВт): "))
         current_night = float(input("Введіть поточні показники в зоні Ніч (кВт): "))
@@ -101,7 +105,7 @@ def calculate_two_zone_electricity():
         previous_night = float(input("Введіть попередні показники в зоні Ніч (кВт): "))
         if current_day < previous_day or current_night < previous_night:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
-            calculate_two_zone_electricity()
+            calculate_two_zone_electricity(phone_number)
             return
 
         rate_day = 4.32
@@ -120,14 +124,14 @@ def calculate_two_zone_electricity():
             f"Кількість кВт (Ніч): {" " * 15} {int(current_night - previous_night)}\n"
         )
 
-        next_step()
+        next_step(phone_number)
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
-        calculate_two_zone_electricity()
+        calculate_two_zone_electricity(phone_number)
 
 
-def calculate_three_zone_electricity():
+def calculate_three_zone_electricity(phone_number):
     try:
         current_night = float(input("Введіть поточні показники Ніч (кВт): "))
         current_half_peak = float(input("Введіть поточні показники Напівпік (кВт): "))
@@ -137,7 +141,7 @@ def calculate_three_zone_electricity():
         previous_peak = float(input("Введіть попередні показники Пік (кВт): "))
         if current_night < previous_night or current_half_peak < previous_half_peak or current_peak < previous_peak:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
-            calculate_three_zone_electricity()
+            calculate_three_zone_electricity(phone_number)
             return
 
         rate_base = 4.32
@@ -159,20 +163,20 @@ def calculate_three_zone_electricity():
             f"Кількість кВт при Пік тарифі: {" " * 6} {int(current_peak - previous_peak)}\n"
         )
 
-        next_step()
+        next_step(phone_number)
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
-        calculate_three_zone_electricity()
+        calculate_three_zone_electricity(phone_number)
 
 
-def calculate_gas_and_supply():
+def calculate_gas_and_supply(phone_number):
     try:
         current = float(input("Введіть поточні показники (м³): "))
         previous = float(input("Введіть попередні показники (м³): "))
         if current < previous:
             print("Помилка: поточні показники повинні бути більшими за попередні.")
-            calculate_gas_and_supply()
+            calculate_gas_and_supply(phone_number)
             return
 
         usage = current - previous
@@ -196,24 +200,24 @@ def calculate_gas_and_supply():
             f"Об'єм тарнспортування: {" " * 8} {usage:.2f} м3\n"
         )
 
-        next_step()
+        next_step(phone_number)
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
-        calculate_gas_and_supply()
+        calculate_gas_and_supply(phone_number)
 
 
-def save_bill():
+def save_bill(phone_number):
     # Створення папки Bill, якщо її ще немає
     if not os.path.exists("Bill"):
         os.makedirs("Bill")
 
     # Отримання поточного часу
-    timedate = datetime.now().strftime("%Y_%m_%d")
+    timedate = datetime.now().strftime("%Y%m%d")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Створення файлу з рахунком
-    file_path = f"Bill/{timedate}.{phone_number}.txt"
+    file_path = f"Bill/{timedate}_{phone_number}.txt"
     with open(file_path, "a") as file:
         # Дата і час
         file.write(f"\n---- Рахунок від {timestamp} ----\n")
