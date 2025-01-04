@@ -26,10 +26,11 @@ def choose_services(phone_number):
     "1. Електроенергія",
     "2. Газ та газопостачання",
     "3. Повернутись до вибору номера телефону",
+    "4. Видалити старі файли біллів та закінчити роботу",
     sep = "\n"
     )
 
-    choice = input("Зробіть вибір (1, 2 або 3): \n")
+    choice = input("Зробіть вибір (1, 2, 3 або 4): \n")
 
     while True:
         if choice == '1':
@@ -38,13 +39,23 @@ def choose_services(phone_number):
             calculate_gas_and_supply(phone_number)
         elif choice == '3':
             main()
+        elif choice == '4':
+            delete_old_files("bill")
+            exit()
         else:
             print("Неправильний вибір. Спробуйте ще раз")
             choose_services(phone_number)
 
 
 def next_step(phone_number):    # Запит на продовження або завершення
-    next_action = input("Виберіть: Продовжити (1) або Завершити (2): ")
+    print(
+        f" Виберіть:",
+        f" 1) Продовжити",
+        f" 2) Завершити",
+        sep = "\n"
+        )
+    next_action = input("Введіть номер вибору (1 або 2): ")
+
     if next_action == '1':
         choose_services(phone_number)
     elif next_action == '2':
@@ -56,12 +67,16 @@ def next_step(phone_number):    # Запит на продовження або 
 
 
 def choose_electricity_tariff(phone_number):
-    print("\nОберіть тариф на електроенергію:")
-    print("1. Однозонний")
-    print("2. Двозонний")
-    print("3. Трьохзонний")
+    print(
+        f"Оберіть тариф на електроенергію:",
+        f" 1. Однозонний",
+        f" 2. Двозонний",
+        f" 3. Трьохзонний",
+        f" 4. Повернутись до вибору комунальних послуг",
+        sep = "\n"
+        )
 
-    tariff_choice = input("Введіть номер тарифу (1, 2 або 3): ")
+    tariff_choice = input("Введіть номер тарифу (1, 2, 3 або 4): ")
 
     if tariff_choice == '1':
         calculate_single_zone_electricity(phone_number)
@@ -69,6 +84,8 @@ def choose_electricity_tariff(phone_number):
         calculate_two_zone_electricity(phone_number)
     elif tariff_choice == '3':
         calculate_three_zone_electricity(phone_number)
+    elif tariff_choice == '4':
+        choose_services(phone_number)
     else:
         print("Неправильний вибір. Спробуйте ще раз.")
         choose_electricity_tariff(phone_number)
@@ -223,31 +240,6 @@ def calculate_gas_and_supply(phone_number):
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
         calculate_gas_and_supply(phone_number)
-
-
-# def save_bill(phone_number, bill_details):
-#     # Створення папки bill, якщо її ще немає
-#     if not os.path.exists("bill"):
-#         os.makedirs("bill")
-#
-#     # Отримання поточного часу
-#     timedate = datetime.now().strftime("%Y%m%d")
-#     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#
-#     # Створення файлу з рахунком
-#     file_name = f"{timedate}_{phone_number}.txt"
-#     file_path = f"bill/{file_name}.txt"
-#     with open(file_path, "a") as file:
-#         # Дата і час
-#         file.write(f"\n---- Рахунок від {timestamp} ----\n")
-#         file.write(f"\nРахунок для телефону: {" " * 5} {phone_number}\n")
-#         file.write("\n" + " " * 13 + "Деталі рахунку:\n")
-#         for item in bill_details:
-#             file.write(f"{item}\n")
-#         file.write("Дякуємо за користування нашими послугами!")
-#         file.write("\n" + "-" * 41 + "\n")
-#
-#     print(f"Рахунок збережено у файлі: {file_name}")
 
 
 if __name__ == "__main__":
