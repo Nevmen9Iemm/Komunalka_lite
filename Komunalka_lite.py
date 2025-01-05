@@ -2,6 +2,7 @@ import os
 from tests.test_input_numbers import validate_phone_number
 from datetime import datetime
 
+from utils.bill_details import BillDetails
 from utils.delete_old_files import delete_old_files
 from utils.save_bill import save_bill
 
@@ -12,10 +13,11 @@ bill_details = []
 
 def main():
     # Запит номера телефону
-    phone_number = input("Введіть номер телефону у форматі 380XXXXXXXXXX: ")
+    phone_number = "380938094594" #input("Введіть номер телефону у форматі 380XXXXXXXXXX: ")
     if not validate_phone_number(phone_number):
         print("Неправильний формат номера телефону. Будь ласка, спробуйте знову.")
         main()
+    bill = BillDetails(phone_number)
     choose_services(phone_number)
     next_step(phone_number)
 
@@ -30,21 +32,20 @@ def choose_services(phone_number):
     sep = "\n"
     )
 
-    choice = input("Зробіть вибір (1, 2, 3 або 4): \n")
+    choice = '1' # input("Зробіть вибір (1, 2, 3 або 4): \n")
 
-    while True:
-        if choice == '1':
-            choose_electricity_tariff(phone_number)
-        elif choice == '2':
-            calculate_gas_and_supply(phone_number)
-        elif choice == '3':
-            main()
-        elif choice == '4':
-            delete_old_files("bill")
-            exit()
-        else:
-            print("Неправильний вибір. Спробуйте ще раз")
-            choose_services(phone_number)
+    if choice == '1':
+        choose_electricity_tariff(phone_number)
+    elif choice == '2':
+        calculate_gas_and_supply(phone_number)
+    elif choice == '3':
+        main()
+    elif choice == '4':
+        delete_old_files("bill")
+        exit()
+    else:
+        print("Неправильний вибір. Спробуйте ще раз")
+        choose_services(phone_number)
 
 
 def next_step(phone_number):    # Запит на продовження або завершення
@@ -76,10 +77,17 @@ def choose_electricity_tariff(phone_number):
         sep = "\n"
         )
 
-    tariff_choice = input("Введіть номер тарифу (1, 2, 3 або 4): ")
+    tariff_choice = '1' # input("Введіть номер тарифу (1, 2, 3 або 4): ")
 
     if tariff_choice == '1':
-        calculate_single_zone_electricity(phone_number)
+        BillDetails(phone_number).calculate_single_zone_electricity(
+            current_single_zone=1661,
+            previous_single_zone=1513
+        )
+        save_bill(phone_number, bill_details)
+        # print(bill.generate_bill())
+        next_step(phone_number)
+        # calculate_single_zone_electricity(phone_number)
     elif tariff_choice == '2':
         calculate_two_zone_electricity(phone_number)
     elif tariff_choice == '3':
