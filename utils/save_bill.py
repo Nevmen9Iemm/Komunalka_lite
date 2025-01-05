@@ -25,3 +25,4 @@ def save_bill(phone_number, bill_details):
         file.write("\n" + "-" * 41 + "\n")
 
     print(f"Рахунок збережено у файлі: {file_name}")
+
