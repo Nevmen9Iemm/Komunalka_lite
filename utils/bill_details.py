@@ -43,6 +43,7 @@ class BillDetails:
             rate_day = 4.32,
             rate_nigh = 2.16
         ):
+        bill_details = []
         usage_day = current_day_two_zone - previous_day_two_zone
         usage_night = current_night_two_zone - previous_night_two_zone
         cost = (usage_day * rate_day) + (usage_night * rate_nigh)
@@ -83,6 +84,7 @@ class BillDetails:
             half_peak_rate=4.32,
             night_rate=1.728
         ):
+        bill_details = []
         usage_peak = current_peak - previous_peak
         usage_half_peak = current_half_peak - previous_half_peak
         usage_night = current_night_three_zone - previous_night_three_zone
@@ -116,31 +118,25 @@ class BillDetails:
 
         save_bill(phone_number, bill_details)
 
-    def calculate_gas(self, current_gas, previous_gas, rate_gas=7.96):
+    def calculate_gas_and_supply(self, current_gas, previous_gas, rate_gas=7.96, rate_supply=1.308):
+        bill_details = []
         usage_gas = current_gas - previous_gas
-        cost = usage_gas * rate_gas
+        cost_gas = usage_gas * rate_gas
+        usage_supply = usage_gas
+        cost_supply = usage_supply * rate_supply
         self.gas = {
             "current_gas": current_gas,
             "previous_gas": previous_gas,
             "usage_gas": usage_gas,
-            "cost": cost,
-        }
-        self.total_cost += cost
-
-    def calculate_supply(self, current_gas, previous_gas, rate_supply=1.308):
-        usage_supply = current_gas - previous_gas
-        cost = usage_supply * rate_supply
-        self.gas = {
-            "current_gas": current_gas,
-            "previous_gas": previous_gas,
             "usage_supply": usage_supply,
-            "cost": cost,
+            "cost_gas": cost_gas,
+            "cost_supply": cost_supply
         }
-        self.total_cost += cost
+        self.total_cost += cost_gas + cost_supply
 
         print(f"Загальна вартість за газ: {cost_gas:.2f} грн")
         print(f"Загальна вартість за газопостачання: {cost_supply:.2f} грн")
-        print(f"Загальна сума: {(cost_gas + cost_supply):.2f} грн")
+        print(f"Загальна сума: {self.total_cost:.2f} грн")
 
         bill_details.append(
             f"Газ: {" " * 23} {cost_gas:.2f} грн\n"
@@ -150,7 +146,7 @@ class BillDetails:
             f"{"-" * 41}\n"
             f"Газопостачання: {" " * 13} {cost_supply:.2f} грн\n"
             f"Об'єм тарнспортування: {" " * 8} {usage_gas:.2f} м3\n"
-            f"Разом: {" " * 22} {total_cost:.2f} грн\n"
+            f"Загальна вартість: {" " * 10} {self.total_cost:.2f} грн\n"
         )
 
         save_bill(phone_number, bill_details)
