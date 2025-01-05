@@ -57,6 +57,20 @@ class BillDetails:
         }
         self.total_cost += cost
 
+        print(f"Загальна вартість за електроенергію (Двозонний тариф): {total_cost_two_zone:.2f} грн")
+
+        bill_details.append(
+            f"Електроенергія (Двозонний):  {total_cost_two_zone:.2f} грн\n"
+            f"\nПоточні показники День: {" " * 10} {int(current_day_two_zone)}\n"
+            f"Поточні показники Ніч: {" " * 11} {int(current_night_two_zone)}\n"
+            f"Попередні показники День: {" " * 8} {int(previous_day_two_zone)}\n"
+            f"Попередні показники Ніч: {" " * 9} {int(previous_night_two_zone)}\n"
+            f"Кількість кВт (День): {" " * 14} {int(cost_day)}\n"
+            f"Кількість кВт (Ніч): {" " * 15} {int(cost_night)}\n"
+        )
+
+        save_bill(self.phone_number, bill_details)
+
     def calculate_three_zone_electricity(
             self,
             current_peak,
@@ -85,6 +99,23 @@ class BillDetails:
         }
         self.total_cost += cost
 
+        print(f"Загальна вартість за електроенергію (Трьохзонний тариф): {total_cost:.2f} грн")
+
+        bill_details.append(
+            f"Електроенергія (Трьохзонний): {total_cost:.2f}грн\n"
+            f"\nПоточні показники Ніч: {" " * 11} {int(current_night_three_zone)}\n"
+            f"Поточні показники Напівпік: {" " * 6} {int(current_half_peak)}\n"
+            f"Поточні показники Пік: {" " * 11} {int(current_peak)}\n"
+            f"Попередні показники Ніч: {int(previous_night_three_zone)}\n"
+            f"Попередні показники Напівпік: {" " * 4} {int(previous_half_peak)}\n"
+            f"Попередні показники Пік: {" " * 9} {int(previous_peak)}\n"
+            f"Кількість кВт при Нічному тарифі:    {int(total_night_three_zone)}\n"
+            f"Кількість кВт при Напівпік тарифі:   {int(total_half_peak)}\n"
+            f"Кількість кВт при Пік тарифі: {" " * 6} {int(total_peak)}\n"
+        )
+
+        save_bill(phone_number, bill_details)
+
     def calculate_gas(self, current_gas, previous_gas, rate_gas=7.96):
         usage_gas = current_gas - previous_gas
         cost = usage_gas * rate_gas
@@ -106,6 +137,23 @@ class BillDetails:
             "cost": cost,
         }
         self.total_cost += cost
+
+        print(f"Загальна вартість за газ: {cost_gas:.2f} грн")
+        print(f"Загальна вартість за газопостачання: {cost_supply:.2f} грн")
+        print(f"Загальна сума: {(cost_gas + cost_supply):.2f} грн")
+
+        bill_details.append(
+            f"Газ: {" " * 23} {cost_gas:.2f} грн\n"
+            f"\nПоточні показники: {" " * 16} {int(current_gas)}\n"
+            f"Попередні показники: {" " * 14} {int(previous_gas)}\n"
+            f"\nСпожито: {" " * 22} {usage_gas:.2f} м3\n"
+            f"{"-" * 41}\n"
+            f"Газопостачання: {" " * 13} {cost_supply:.2f} грн\n"
+            f"Об'єм тарнспортування: {" " * 8} {usage_gas:.2f} м3\n"
+            f"Разом: {" " * 22} {total_cost:.2f} грн\n"
+        )
+
+        save_bill(phone_number, bill_details)
 
     def generate_bill(self):
         bill_details = f"Номер телефону: {self.phone_number}\n"

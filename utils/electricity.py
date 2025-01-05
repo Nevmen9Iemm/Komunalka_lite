@@ -44,14 +44,6 @@ def calculate_single_zone_electricity(phone_number):
         rate = 4.32
         cost = usage * rate
         print(f"Загальна вартість за електроенергію: {cost:.2f} грн")
-        bill_details.append(
-            f"Електроенергія (Однозонний): {cost:.2f} грн\n"
-            f"Поточні показники: {" " * 15} {int(current_single_zone)}\n"
-            f"Попередні показники: {" " * 13} {int(previous_single_zone)}\n"
-            f"Кількість кВт: {" " * 21} {int(usage)}\n"
-        )
-
-        return bill_details
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення")
@@ -77,18 +69,6 @@ def calculate_two_zone_electricity(phone_number):
         total_cost_day = cost_day * rate_day
         total_cost_night = cost_night * rate_nigh
         total_cost_two_zone = total_cost_day + total_cost_night
-        print(f"Загальна вартість за електроенергію (Двозонний тариф): {total_cost_two_zone:.2f} грн")
-        bill_details.append(
-            f"Електроенергія (Двозонний):  {total_cost_two_zone:.2f} грн\n"
-            f"\nПоточні показники День: {" " * 10} {int(current_day_two_zone)}\n"
-            f"Поточні показники Ніч: {" " * 11} {int(current_night_two_zone)}\n"
-            f"Попередні показники День: {" " * 8} {int(previous_day_two_zone)}\n"
-            f"Попередні показники Ніч: {" " * 9} {int(previous_night_two_zone)}\n"
-            f"Кількість кВт (День): {" " * 14} {int(cost_day)}\n"
-            f"Кількість кВт (Ніч): {" " * 15} {int(cost_night)}\n"
-        )
-
-        return bill_details
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
@@ -119,22 +99,6 @@ def calculate_three_zone_electricity(phone_number):
         total_peak = current_peak - previous_peak
         cost_peak = total_peak * peak_rate
         total_cost = cost_night_three_zone + cost_half_peak + cost_peak
-        print(f"Загальна вартість за електроенергію (Трьохзонний тариф): {total_cost:.2f} грн")
-        bill_details.append(
-            f"Електроенергія (Трьохзонний): {total_cost:.2f}грн\n"
-            f"\nПоточні показники Ніч: {" " * 11} {int(current_night_three_zone)}\n"
-            f"Поточні показники Напівпік: {" " * 6} {int(current_half_peak)}\n"
-            f"Поточні показники Пік: {" " * 11} {int(current_peak)}\n"
-            f"Попередні показники Ніч: {int(previous_night_three_zone)}\n"
-            f"Попередні показники Напівпік: {" " * 4} {int(previous_half_peak)}\n"
-            f"Попередні показники Пік: {" " * 9} {int(previous_peak)}\n"
-            f"Кількість кВт при Нічному тарифі:    {int(total_night_three_zone)}\n"
-            f"Кількість кВт при Напівпік тарифі:   {int(total_half_peak)}\n"
-            f"Кількість кВт при Пік тарифі: {" " * 6} {int(total_peak)}\n"
-        )
-
-        save_bill(phone_number, bill_details)
-        next_step(phone_number)
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
