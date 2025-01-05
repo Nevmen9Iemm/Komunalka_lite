@@ -1,3 +1,6 @@
+from utils.save_bill import save_bill
+
+
 class BillDetails:
     def __init__(self, phone_number):
         self.phone_number = phone_number
@@ -102,4 +105,4 @@ class BillDetails:
             for key, value in self.gas.items():
                 bill_details += f"  {key.capitalize()}: {value}\n"
         bill_details += f"\nЗагальна вартість: {self.total_cost:.2f} грн\n"
-        return bill_details
+        save_bill(phone_number=self.phone_number, bill_details=bill_details)
