@@ -1,70 +1,5 @@
-import os
-from tests.test_input_numbers import validate_phone_number
-from datetime import datetime
 
 from utils.bill_details import BillDetails
-from utils.delete_old_files import delete_old_files
-from utils.save_bill import save_bill
-
-
-# Ініціалізація списку для зберігання рахунку
-bill_details = []
-
-
-def main():
-    # Запит номера телефону
-    phone_number = "380938094594" #input("Введіть номер телефону у форматі 380XXXXXXXXXX: ")
-    if not validate_phone_number(phone_number):
-        print("Неправильний формат номера телефону. Будь ласка, спробуйте знову.")
-        main()
-    bill = BillDetails(phone_number)
-    choose_services(phone_number)
-    next_step(phone_number)
-
-
-def choose_services(phone_number):
-    print(
-    "Зробіть вибір комунальних послуг:",
-    "1. Електроенергія",
-    "2. Газ та газопостачання",
-    "3. Повернутись до вибору номера телефону",
-    "4. Видалити старі файли біллів та закінчити роботу",
-    sep = "\n"
-    )
-
-    choice = '1' # input("Зробіть вибір (1, 2, 3 або 4): \n")
-
-    if choice == '1':
-        choose_electricity_tariff(phone_number)
-    elif choice == '2':
-        calculate_gas_and_supply(phone_number)
-    elif choice == '3':
-        main()
-    elif choice == '4':
-        delete_old_files("bill")
-        exit()
-    else:
-        print("Неправильний вибір. Спробуйте ще раз")
-        choose_services(phone_number)
-
-
-def next_step(phone_number):    # Запит на продовження або завершення
-    print(
-        f" Виберіть:",
-        f" 1) Продовжити",
-        f" 2) Завершити",
-        sep = "\n"
-        )
-    next_action = input("Введіть номер вибору (1 або 2): ")
-
-    if next_action == '1':
-        choose_services(phone_number)
-    elif next_action == '2':
-        delete_old_files("bill")
-        exit()
-    else:
-        print("Неправильний вибір. Спробуйте ще раз.")
-        return next_action
 
 
 def choose_electricity_tariff(phone_number):
@@ -77,17 +12,15 @@ def choose_electricity_tariff(phone_number):
         sep = "\n"
         )
 
-    tariff_choice = '1' # input("Введіть номер тарифу (1, 2, 3 або 4): ")
+    tariff_choice = '1' #input("Введіть номер тарифу (1, 2, 3 або 4): ")
 
     if tariff_choice == '1':
-        BillDetails(phone_number).calculate_single_zone_electricity(
-            current_single_zone=1661,
-            previous_single_zone=1513
+        bill = BillDetails(phone_number)
+        bill.calculate_single_zone_electricity(
+            current_single_zone='1661', #input("Введіть поточні показники (кВт): "),
+            previous_single_zone='1513', #input("Введіть попередні показники (кВт): ")
         )
-        save_bill(phone_number, bill_details)
-        # print(bill.generate_bill())
-        next_step(phone_number)
-        # calculate_single_zone_electricity(phone_number)
+
     elif tariff_choice == '2':
         calculate_two_zone_electricity(phone_number)
     elif tariff_choice == '3':
@@ -118,8 +51,7 @@ def calculate_single_zone_electricity(phone_number):
             f"Кількість кВт: {" " * 21} {int(usage)}\n"
         )
 
-        save_bill(phone_number, bill_details)
-        next_step(phone_number)
+        return bill_details
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення")
@@ -156,8 +88,7 @@ def calculate_two_zone_electricity(phone_number):
             f"Кількість кВт (Ніч): {" " * 15} {int(cost_night)}\n"
         )
 
-        save_bill(phone_number, bill_details)
-        next_step(phone_number)
+        return bill_details
 
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
@@ -208,47 +139,3 @@ def calculate_three_zone_electricity(phone_number):
     except ValueError:
         print("Будь ласка, введіть правильні числові значення.")
         calculate_three_zone_electricity(phone_number)
-
-
-# Функція для розрахунку газу
-def calculate_gas_and_supply(phone_number):
-    try:
-        current_gas = float(input("Введіть поточні показники (м³): "))
-        previous_gas = float(input("Введіть попередні показники (м³): "))
-        if current_gas < previous_gas:
-            print("Помилка: поточні показники повинні бути більшими за попередні.")
-            calculate_gas_and_supply(phone_number)
-            return
-
-        rate_gas = 7.96
-        rate_supply = 1.308
-        usage_gas = current_gas - previous_gas
-        cost_gas = usage_gas * rate_gas
-        cost_supply = usage_gas * rate_supply
-        total_cost = cost_gas + cost_supply
-
-        print(f"Загальна вартість за газ: {cost_gas:.2f} грн")
-        print(f"Загальна вартість за газопостачання: {cost_supply:.2f} грн")
-        print(f"Загальна сума: {total_cost:.2f} грн")
-
-        bill_details.append(
-            f"Газ: {" " * 23} {cost_gas:.2f} грн\n"
-            f"\nПоточні показники: {" " * 16} {int(current_gas)}\n"
-            f"Попередні показники: {" " * 14} {int(previous_gas)}\n"
-            f"\nСпожито: {" " * 22} {usage_gas:.2f} м3\n"
-            f"{"-" * 41}\n"
-            f"Газопостачання: {" " * 13} {cost_supply:.2f} грн\n"
-            f"Об'єм тарнспортування: {" " * 8} {usage_gas:.2f} м3\n"
-            f"Разом: {" " * 22} {total_cost:.2f} грн\n"
-        )
-
-        save_bill(phone_number, bill_details)
-        next_step(phone_number)
-
-    except ValueError:
-        print("Будь ласка, введіть правильні числові значення.")
-        calculate_gas_and_supply(phone_number)
-
-
-if __name__ == "__main__":
-    main()
