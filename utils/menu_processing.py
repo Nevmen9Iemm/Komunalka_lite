@@ -1,5 +1,6 @@
+from utils.bill_details import BillDetails
 from utils.electricity import choose_electricity_tariff
-# from utils.gas_and_supply import calculate_gas_and_supply
+from utils.gas_and_supply import calculate_gas_and_supply
 from utils.save_bill import save_bill
 from utils.delete_old_files import delete_old_files
 
@@ -23,7 +24,11 @@ def choose_services(phone_number):
             choose_electricity_tariff(phone_number)
             next_step(phone_number)
         elif choice == '2':
-            calculate_gas_and_supply(phone_number)
+            bill = BillDetails(phone_number)
+            bill.calculate_gas_and_supply(
+                current_gas = 30800, #int(input("Введіть поточні показники (м³): ")),
+                previous_gas = 29600, #int(input("Введіть попередні показники (м³): "))
+            )
             next_step(phone_number)
         elif choice == '3':
             delete_old_files("bill")
@@ -41,7 +46,7 @@ def next_step(phone_number):    # Запит на продовження або 
         f" 2) Завершити",
         sep = "\n"
         )
-    next_action = input("Введіть номер вибору (1, 2, 3 або 4): ")
+    next_action = input("Введіть номер вибору (1 або 2): ")
 
     if next_action == '1':
         choose_services(phone_number)
