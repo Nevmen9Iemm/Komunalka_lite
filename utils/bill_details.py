@@ -9,8 +9,11 @@ class BillDetails:
         self.total_cost = 0.0
 
     def calculate_single_zone_electricity(self, current_single_zone, previous_single_zone, rate=4.32):
-        usage = current_single_zone - previous_single_zone
+        bill_details = []
+
+        usage = int(current_single_zone) - int(previous_single_zone)
         cost = usage * rate
+
         self.electricity = {
             "type": "Однозонний",
             "current_single_zone": current_single_zone,
@@ -19,6 +22,17 @@ class BillDetails:
             "cost": cost,
         }
         self.total_cost += cost
+
+        print(f"Загальна вартість за електроенергію: {cost:.2f} грн")
+
+        bill_details.append(
+            f"Електроенергія (Однозонний): {cost:.2f} грн\n"
+            f"Поточні показники: {" " * 15} {int(current_single_zone)}\n"
+            f"Попередні показники: {" " * 13} {int(previous_single_zone)}\n"
+            f"Кількість кВт: {" " * 21} {int(usage)}\n"
+        )
+
+        save_bill(self.phone_number, bill_details)
 
     def calculate_two_zone_electricity(
             self,
