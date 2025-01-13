@@ -1,5 +1,4 @@
-from utils.menu_processing import choose_services
-from utils.phone_numbers import phone_numbers
+from utils.menu_processing import choose_services, phone_numbers
 
 
 def main():

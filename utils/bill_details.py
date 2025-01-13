@@ -10,29 +10,33 @@ class BillDetails:
 
     def calculate_single_zone_electricity(self, current_single_zone, previous_single_zone, rate=4.32):
         bill_details = []
+        if current_single_zone >= previous_single_zone:
+            usage = int(current_single_zone) - int(previous_single_zone)
+            cost = usage * rate
 
-        usage = int(current_single_zone) - int(previous_single_zone)
-        cost = usage * rate
+            self.electricity = {
+                "type": "Однозонний",
+                "current_single_zone": current_single_zone,
+                "previous_single_zone": previous_single_zone,
+                "usage": usage,
+                "cost": cost,
+            }
+            self.total_cost += cost
 
-        self.electricity = {
-            "type": "Однозонний",
-            "current_single_zone": current_single_zone,
-            "previous_single_zone": previous_single_zone,
-            "usage": usage,
-            "cost": cost,
-        }
-        self.total_cost += cost
+            print(f"Загальна вартість за електроенергію: {cost:.2f} грн")
 
-        print(f"Загальна вартість за електроенергію: {cost:.2f} грн")
+            bill_details.append(
+                f"Електроенергія (Однозонний): {cost:.2f} грн\n"
+                f"Поточні показники: {" " * 15} {int(current_single_zone)}\n"
+                f"Попередні показники: {" " * 13} {int(previous_single_zone)}\n"
+                f"Кількість кВт: {" " * 21} {int(usage)}\n"
+            )
 
-        bill_details.append(
-            f"Електроенергія (Однозонний): {cost:.2f} грн\n"
-            f"Поточні показники: {" " * 15} {int(current_single_zone)}\n"
-            f"Попередні показники: {" " * 13} {int(previous_single_zone)}\n"
-            f"Кількість кВт: {" " * 21} {int(usage)}\n"
-        )
+            save_bill(self.phone_number, bill_details)
 
-        save_bill(self.phone_number, bill_details)
+        else:
+            print("Будь ласка, введіть правильні числові значення")
+
 
     def calculate_two_zone_electricity(
             self,

@@ -1,10 +1,18 @@
-from utils.bill_details import BillDetails
-from utils.electricity import choose_electricity_tariff
-from utils.gas_and_supply import calculate_gas_and_supply
-from utils.save_bill import save_bill
+from tests.test_input_numbers import validate_phone_number
+from utils.keeping_records import choose_electricity_tariff, choose_gas_tariff
 from utils.delete_old_files import delete_old_files
 
-bill_details = []
+
+def phone_numbers():
+    # Запит номера телефону
+    phone_number = input("Введіть номер телефону у форматі 380XXXXXXXXXX: ")
+
+    if not validate_phone_number(phone_number):
+        print("Неправильний формат номера телефону. Будь ласка, спробуйте знову.")
+        phone_numbers()
+
+    choose_services(phone_number)
+
 
 def choose_services(phone_number):
     print(
@@ -24,11 +32,7 @@ def choose_services(phone_number):
             choose_electricity_tariff(phone_number)
             next_step(phone_number)
         elif choice == '2':
-            bill = BillDetails(phone_number)
-            bill.calculate_gas_and_supply(
-                current_gas = 30800, #int(input("Введіть поточні показники (м³): ")),
-                previous_gas = 29600, #int(input("Введіть попередні показники (м³): "))
-            )
+            choose_gas_tariff(phone_number)
             next_step(phone_number)
         elif choice == '3':
             delete_old_files("bill")

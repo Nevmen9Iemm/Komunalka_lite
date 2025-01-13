@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from utils.menu_processing import choose_services, next_step
-from utils.electricity import choose_electricity_tariff
+from utils.keeping_records import choose_electricity_tariff
 from utils.gas_and_supply import calculate_gas_and_supply
 from utils.save_bill import save_bill
 from utils.delete_old_files import delete_old_files
